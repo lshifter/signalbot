@@ -10,10 +10,30 @@
     @keyframes fadein { from { opacity: 0;} to {opacity: 1;}}
     .animate-fadein { animation: fadein 0.7s;}
     .selected { border: 2px solid #a78bfa !important; background: #ede9fe !important;}
+    .modal-bg { background: rgba(20,20,40,0.45);}
+    .loader {
+      border: 4px solid #ede9fe;
+      border-top: 4px solid #7c3aed;
+      border-radius: 50%;
+      width: 38px;
+      height: 38px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+    @keyframes spin { 100% { transform: rotate(360deg); }}
   </style>
 </head>
 <body class="bg-gradient-to-br from-blue-100 via-violet-100 to-pink-100 min-h-screen flex flex-col justify-center items-center">
-  <div class="w-full max-w-md bg-white/95 rounded-2xl shadow-xl p-6 mt-10">
+
+  <!-- Загрузка (modal) -->
+  <div id="modalLoader" class="fixed z-40 left-0 top-0 w-full h-full flex flex-col items-center justify-center modal-bg hidden">
+    <div class="bg-white rounded-2xl px-8 py-7 flex flex-col items-center gap-3 shadow-xl">
+      <div class="loader"></div>
+      <div class="font-semibold text-lg text-gray-700 mt-2">Загрузка...</div>
+    </div>
+  </div>
+
+  <div class="w-full max-w-md bg-white/95 rounded-2xl shadow-xl p-6 mt-10 relative z-10">
     <h1 class="text-2xl font-bold text-gray-900 mb-4 text-center">Сигналы по играм</h1>
     <div class="flex flex-col gap-4 mb-5">
       <button id="btn-chicken" class="game-btn flex items-center gap-2 px-4 py-2 bg-yellow-100 hover:bg-yellow-200 rounded-xl border border-yellow-300 font-semibold text-lg transition-all">
@@ -51,8 +71,7 @@
 
     // Функция для генерации "уклона" — чаще маленькие значения
     function weightedJump() {
-      // Вес: 1-2 (самые частые), 3-4 (часто), 5-6-7 (редко)
-      const weights = [6, 6, 4, 4, 2, 1, 1]; // индексы: 0=>1 прыжок ... 6=>7 прыжков
+      const weights = [7, 7, 5, 5, 2, 1, 1]; // 1-4 часто, 5-7 редко
       const arr = [];
       for(let i=0; i<weights.length; i++) {
         for(let j=0; j<weights[i]; j++) arr.push(i+1);
@@ -70,6 +89,7 @@
     const getSignalBtn = document.getElementById('getSignalBtn');
     const signalDiv = document.getElementById('signal');
     const next5Btn = document.getElementById('next5Btn');
+    const modalLoader = document.getElementById('modalLoader');
 
     function selectGame(name) {
       selectedGame = name;
@@ -119,8 +139,8 @@
           ${lines.join("<br>")}
           <br>После выигрыша — стоп!<br>
           <span class="text-xs text-gray-600 block mt-2">
-          Шанс выигрыша 86%. Все решения вы принимаете сами.<br>
-          Не нарушайте законы своей страны!</span>`;
+          Шанс выигрыша 86%. Все решения вы принимаете сами.
+          </span>`;
       }
       if (selectedGame === "Chicken Road") {
         let lines = [];
@@ -133,8 +153,8 @@
           ${lines.join("<br>")}
           <br>Как только словил выигрыш — остановись!<br>
           <span class="text-xs text-gray-600 block mt-2">
-          Шанс выигрыша 86%. Все решения вы принимаете сами.<br>
-          Не нарушайте законы своей страны!</span>`;
+          Шанс выигрыша 86%. Все решения вы принимаете сами.
+          </span>`;
       }
       return signalText;
     }
@@ -150,16 +170,25 @@
         signalDiv.innerHTML = "<span class='text-red-500 font-semibold text-center block'>Пожалуйста, загрузите скриншот игры!</span>";
         return;
       }
-      const signalText = generateSignal();
-      signalDiv.innerHTML = `<div class="rounded-xl bg-violet-50/95 p-4 shadow text-gray-800 animate-fadein text-lg mb-2">${signalText}</div>`;
-      next5Btn.style.display = "flex";
+      showLoader();
+      setTimeout(() => {
+        hideLoader();
+        const signalText = generateSignal();
+        signalDiv.innerHTML = `<div class="rounded-xl bg-violet-50/95 p-4 shadow text-gray-800 animate-fadein text-lg mb-2">${signalText}</div>`;
+        next5Btn.style.display = "flex";
+      }, 1800); // 1.8 сек загрузка (можно поменять)
     }
+
+    function showLoader() { modalLoader.classList.remove('hidden'); }
+    function hideLoader() { modalLoader.classList.add('hidden'); }
 
     getSignalBtn.onclick = showSignal;
     next5Btn.onclick = showSignal;
+
   </script>
 </body>
 </html>
+
 
 
 
