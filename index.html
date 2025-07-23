@@ -44,12 +44,21 @@
     </button>
   </div>
   <script>
-    // Настройки сигналов
     let selectedGame = null;
     let imageLoaded = false;
     let fileObj = null;
     const safeAviatorCoeffs = [1.1, 1.15, 1.2, 1.22, 1.25, 1.27, 1.3, 1.33, 1.35, 1.4];
-    const safeChickenJumps = [4, 5, 6];
+
+    // Функция для генерации "уклона" — чаще маленькие значения
+    function weightedJump() {
+      // Вес: 1-2 (самые частые), 3-4 (часто), 5-6-7 (редко)
+      const weights = [6, 6, 4, 4, 2, 1, 1]; // индексы: 0=>1 прыжок ... 6=>7 прыжков
+      const arr = [];
+      for(let i=0; i<weights.length; i++) {
+        for(let j=0; j<weights[i]; j++) arr.push(i+1);
+      }
+      return arr[Math.floor(Math.random()*arr.length)];
+    }
 
     // DOM
     const btnChicken = document.getElementById('btn-chicken');
@@ -116,7 +125,7 @@
       if (selectedGame === "Chicken Road") {
         let lines = [];
         for (let i = 1; i <= 5; i++) {
-          let jumps = safeChickenJumps[Math.floor(Math.random()*safeChickenJumps.length)];
+          let jumps = weightedJump();
           lines.push(`Игра ${i}: делай ровно <b>${jumps}</b> прыжков`);
         }
         signalText =
@@ -148,9 +157,9 @@
 
     getSignalBtn.onclick = showSignal;
     next5Btn.onclick = showSignal;
-
   </script>
 </body>
 </html>
+
 
 
