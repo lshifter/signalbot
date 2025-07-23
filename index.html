@@ -62,7 +62,6 @@
     const signalDiv = document.getElementById('signal');
     const next5Btn = document.getElementById('next5Btn');
 
-    // UI логика выбора игры
     function selectGame(name) {
       selectedGame = name;
       gameSelect.textContent = `Выбрана игра: ${name}`;
@@ -79,7 +78,6 @@
     btnChicken.onclick = () => selectGame("Chicken Road");
     btnAviator.onclick = () => selectGame("Aviator");
 
-    // Превью картинки
     fileInput.onchange = (e) => {
       const file = e.target.files[0];
       if (!file) {
@@ -99,7 +97,6 @@
       reader.readAsDataURL(file);
     };
 
-    // Генерация сигнала на 5 игр
     function generateSignal() {
       let signalText = "";
       if (selectedGame === "Aviator") {
@@ -113,14 +110,13 @@
           ${lines.join("<br>")}
           <br>После выигрыша — стоп!<br>
           <span class="text-xs text-gray-600 block mt-2">
-          ⚠️ Бот может выдать неправильный сигнал. Загружайте актуальный скриншот с игры!<br>
-          Шанс выигрыша 86%. Мы работаем честно, но помни о рисках.<br>
-          Все решения принимаешь ты сам. Не нарушай законы своей страны!</span>`;
+          Шанс выигрыша 86%. Все решения вы принимаете сами.<br>
+          Не нарушайте законы своей страны!</span>`;
       }
       if (selectedGame === "Chicken Road") {
-        let jumps = safeChickenJumps[Math.floor(Math.random()*safeChickenJumps.length)];
         let lines = [];
         for (let i = 1; i <= 5; i++) {
+          let jumps = safeChickenJumps[Math.floor(Math.random()*safeChickenJumps.length)];
           lines.push(`Игра ${i}: делай ровно <b>${jumps}</b> прыжков`);
         }
         signalText =
@@ -128,14 +124,12 @@
           ${lines.join("<br>")}
           <br>Как только словил выигрыш — остановись!<br>
           <span class="text-xs text-gray-600 block mt-2">
-          ⚠️ Бот может выдать неправильный сигнал. Загружайте актуальный скриншот с игры!<br>
-          Шанс выигрыша 86%. Мы работаем честно, но помни о рисках.<br>
-          Все решения принимаешь ты сам. Не нарушай законы своей страны!</span>`;
+          Шанс выигрыша 86%. Все решения вы принимаете сами.<br>
+          Не нарушайте законы своей страны!</span>`;
       }
       return signalText;
     }
 
-    // Генерация сигнала (первая и последующие)
     function showSignal() {
       signalDiv.innerHTML = "";
       next5Btn.style.display = "none";
@@ -158,4 +152,5 @@
   </script>
 </body>
 </html>
+
 
